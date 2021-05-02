@@ -10,6 +10,7 @@ import java.io.Reader;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 
 /**
  * Created by LaunchCode
@@ -70,16 +71,36 @@ public class JobData {
         // load data, if not already loaded
         loadData();
 
-        ArrayList<HashMap<String, String>> jobs = new ArrayList<>();
-
-        for (HashMap<String, String> row : allJobs) {
-
-            String aValue = row.get(column);
-
-            if (aValue.contains(value)) {
-                jobs.add(row);
+        // make new ArrayList with LC values
+        ArrayList<HashMap<String, String>> allJobsLC = new ArrayList<>();
+        for (HashMap<String, String> map : allJobs) {
+            HashMap<String, String> newMap = new HashMap<>();
+            for (String str : map.keySet()) {
+                String newValue = map.get(str);
+                String newValueLC = newValue.toLowerCase();
+                newMap.put(str, newValueLC);
+                allJobsLC.add(newMap);
             }
         }
+
+        ArrayList<HashMap<String, String>> jobs = new ArrayList<>();
+
+        for (int i = 0; i < allJobsLC.size(); i++) {
+            String aValue = allJobsLC.get(i).get(column);
+
+            if (aValue.contains(value)) {
+                jobs.add(allJobs.get(i));
+            }
+        }
+
+//        for (HashMap<String, String> row : allJobsLC) {
+//
+//            String aValue = row.get(column);
+//
+//            if (aValue.contains(value)) {
+//                jobs.add(row);
+//            }
+//        }
 
         return jobs;
     }
@@ -87,13 +108,25 @@ public class JobData {
     public static ArrayList<HashMap<String, String>> findByValue(String value){
         loadData();
 
+        ArrayList<HashMap<String, String>> allJobsLC = new ArrayList<>();
+        for (HashMap<String, String> map : allJobs) {
+            HashMap<String, String> newMap = new HashMap<>();
+            for (String str : map.keySet()) {
+                String newValue = map.get(str);
+                String newValueLC = newValue.toLowerCase();
+                newMap.put(str, newValueLC);
+                allJobsLC.add(newMap);
+            }
+        }
+
         ArrayList<HashMap<String, String>> newArray = new ArrayList<>();
 
-        for (HashMap<String, String> map : allJobs) {
-            for (String str : map.keySet()) {
-                String search = map.get(str);
+//        for (HashMap<String, String> map : allJobs) {
+        for (int i = 0; i < allJobsLC.size(); i++) {
+            for (String str : allJobsLC.get(i).keySet()) {
+                String search = allJobsLC.get(i).get(str);
                 if (search.contains(value)) {
-                    newArray.add(map);
+                    newArray.add(allJobs.get(i));
                 }
             }
         }
