@@ -87,9 +87,18 @@ public class JobData {
     public static ArrayList<HashMap<String, String>> findByValue(String value){
         loadData();
 
-        ArrayList<HashMap<String, String>> jobs = new ArrayList<>();
+        ArrayList<HashMap<String, String>> newArray = new ArrayList<>();
 
-        for (HashMap<String, String> row : allJobs) {
+        for (HashMap<String, String> map : allJobs) {
+            for (String str : map.keySet()) {
+                String search = map.get(str);
+                if (search.contains(value)) {
+                    newArray.add(map);
+                }
+            }
+        }
+
+        return newArray;
     }
 
     /**
