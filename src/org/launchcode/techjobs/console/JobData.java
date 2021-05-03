@@ -1,5 +1,6 @@
 package org.launchcode.techjobs.console;
 
+//import jdk.internal.icu.text.UnicodeSet;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVParser;
 import org.apache.commons.csv.CSVRecord;
@@ -15,12 +16,16 @@ import java.util.Locale;
 /**
  * Created by LaunchCode
  */
+
+
+
 public class JobData {
 
     private static final String DATA_FILE = "resources/job_data.csv";
     private static Boolean isDataLoaded = false;
 
     private static ArrayList<HashMap<String, String>> allJobs;
+    private static ArrayList<HashMap<String, String>> allJobsLC = new ArrayList<HashMap<String, String>>();
 
     /**
      * Fetch list of all values from loaded data,
@@ -71,24 +76,14 @@ public class JobData {
         // load data, if not already loaded
         loadData();
 
-        // make new ArrayList with LC values
-        ArrayList<HashMap<String, String>> allJobsLC = new ArrayList<>();
-        for (HashMap<String, String> map : allJobs) {
-            HashMap<String, String> newMap = new HashMap<>();
-            for (String str : map.keySet()) {
-                String newValue = map.get(str);
-                String newValueLC = newValue.toLowerCase();
-                newMap.put(str, newValueLC);
-                allJobsLC.add(newMap);
-            }
-        }
+        makeLC();
 
         ArrayList<HashMap<String, String>> jobs = new ArrayList<>();
 
         for (int i = 0; i < allJobsLC.size(); i++) {
             String aValue = allJobsLC.get(i).get(column);
-
-            if (aValue.contains(value)) {
+            String valueLC = value.toLowerCase();
+            if (aValue.contains(valueLC)) {
                 jobs.add(allJobs.get(i));
             }
         }
@@ -108,16 +103,7 @@ public class JobData {
     public static ArrayList<HashMap<String, String>> findByValue(String value){
         loadData();
 
-        ArrayList<HashMap<String, String>> allJobsLC = new ArrayList<>();
-        for (HashMap<String, String> map : allJobs) {
-            HashMap<String, String> newMap = new HashMap<>();
-            for (String str : map.keySet()) {
-                String newValue = map.get(str);
-                String newValueLC = newValue.toLowerCase();
-                newMap.put(str, newValueLC);
-                allJobsLC.add(newMap);
-            }
-        }
+        makeLC();
 
         ArrayList<HashMap<String, String>> newArray = new ArrayList<>();
 
@@ -125,7 +111,8 @@ public class JobData {
         for (int i = 0; i < allJobsLC.size(); i++) {
             for (String str : allJobsLC.get(i).keySet()) {
                 String search = allJobsLC.get(i).get(str);
-                if (search.contains(value)) {
+                String valueLC = value.toLowerCase();
+                if (search.contains(valueLC)) {
                     newArray.add(allJobs.get(i));
                 }
             }
@@ -175,4 +162,25 @@ public class JobData {
         }
     }
 
-}
+    // make new ArrayList with LC values
+    private static void makeLC() {
+
+        if (allJobsLC.size() == 0) {
+            for (HashMap<String, String> map : allJobs) {
+                HashMap<String, String> newMap = new HashMap<>();
+                for (String str : map.keySet()) {
+                    String newValue = map.get(str);
+                    String newValueLC = newValue.toLowerCase();
+                    newMap.put(str, newValueLC);
+                }
+                allJobsLC.add(newMap);
+                }
+        } else {
+            return;
+        }
+
+            }
+        }
+
+
+
